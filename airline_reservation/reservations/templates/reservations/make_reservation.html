@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Reservation</title>
+</head>
+<body>
+    <h1>Make a Reservation</h1>
+    <h2>Flight Details:</h2>
+    <p>Flight Name: {{ flight.name }}</p>
+    <p>Departure: {{ flight.departure }}</p>
+    <p>Arrival: {{ flight.arrival }}</p>
+    
+    <form method="post" action="{% url 'make_reservation' flight.id %}">
+        {% csrf_token %}
+        <label for="passenger_name">Passenger Name:</label>
+        <input type="text" id="passenger_name" name="passenger_name" required>
+        <button type="submit">Reserve</button>
+    </form>
+</body>
+</html>

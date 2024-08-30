@@ -1,0 +1,25 @@
+<!-- reservations/templates/reservations/search_flights.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Flights</title>
+</head>
+<body>
+    <h1>Search Flights</h1>
+
+    <form method="get" action="{% url 'search_flights' %}">
+        <input type="text" name="query" placeholder="Search for flights" value="{{ request.GET.query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Results</h2>
+    <ul>
+        {% for flight in flights %}
+            <li>{{ flight.flight_number }} - {{ flight.origin }} to {{ flight.destination }} on {{ flight.date }}</li>
+        {% empty %}
+            <li>No flights found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
