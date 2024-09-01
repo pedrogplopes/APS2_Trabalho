@@ -8,9 +8,10 @@
 <body>
     <h1>Make a Reservation</h1>
     <h2>Flight Details</h2>
-    <p>Flight Name: {{ flight.name }}</p>
-    <p>Departure: {{ flight.origin }}</p>
-    <p>Arrival: {{ flight.destination }}</p>
+    <p>Flight Name: <b>{{ flight.flight_number }} - {{ flight.origin }} to {{ flight.destination }} on {{ flight.date }}</b></p>
+    <p>Departure: <b>{{ flight.origin }}</b></p>
+    <p>Arrival: <b>{{ flight.destination }}</b></p>
+    <p>Date: <b>{{ flight.date }}</b></p>
     
     <form method="post" action="{% url 'make_reservation' flight.id %}">
         {% csrf_token %}
