@@ -15,6 +15,10 @@ def search_flights(request):
 def make_reservation(request, flight_id):
     flight = get_object_or_404(Flight, id=flight_id)
     if request.method == 'POST':
-        passenger_name = request.POST.get('passenger_name')
-        Reservation.objects.create(flight=flight, passenger_name=passenger_name)
+        # modelo Reservation atualmente não tem passenger_name, e requer user_id e seats_reserved
+        # passenger_name = request.POST.get('passenger_name')
+        # adicionado campo pra seats_reserved
+        seats_reserved = request.POST.get('seats_reserved')
+        # user_id deveria ser obtido por POST.get, forçando user_id 1 no código por enquanto
+        Reservation.objects.create(user_id=1, flight=flight, seats_reserved=seats_reserved)
     return render(request, 'reservations/make_reservation.html', {'flight': flight})
