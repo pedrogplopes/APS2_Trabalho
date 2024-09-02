@@ -1,22 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Make Reservation</title>
-</head>
-<body>
-    <h1>Make a Reservation</h1>
-    <h2>Flight Details:</h2>
-    <p>Flight Name: {{ flight.name }}</p>
-    <p>Departure: {{ flight.departure }}</p>
-    <p>Arrival: {{ flight.arrival }}</p>
+<h1>Reserva para o voo {{ flight.flight_number }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="seats_requested">Número de assentos:</label>
+    <input type="number" name="seats_requested" min="1" max="{{ flight.available_seats }}" required>
     
-    <form method="post" action="{% url 'make_reservation' flight.id %}">
-        {% csrf_token %}
-        <label for="passenger_name">Passenger Name:</label>
-        <input type="text" id="passenger_name" name="passenger_name" required>
-        <button type="submit">Reserve</button>
-    </form>
-</body>
-</html>
+    <button type="submit">Reservar</button>
+</form>
+
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<p>Origem: {{ flight.origin }}</p>
+<p>Destino: {{ flight.destination }}</p>
+<p>Data: {{ flight.date }}</p>
+<p>Assentos disponíveis: {{ flight.available_seats }}</p>

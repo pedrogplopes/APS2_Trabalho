@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minhas Reservas</title>
+</head>
+<body>
+    <h1>Minhas Reservas</h1>
+
+    <ul>
+        {% for reservation in reservations %}
+            <li>
+                {{ reservation.flight.flight_number }} - {{ reservation.flight.origin }} para {{ reservation.flight.destination }}
+                em {{ reservation.flight.date }} ({{ reservation.seats_reserved }} assentos)
+                <form method="post" action="{% url 'cancel_reservation' reservation.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Cancelar Reserva</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>Você não tem reservas.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'search_flights' %}">Voltar para a busca de voos</a>
+</body>
+</html>

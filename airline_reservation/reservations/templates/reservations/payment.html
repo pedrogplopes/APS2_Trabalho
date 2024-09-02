@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pagamento</title>
+</head>
+<body>
+    <h1>Pagamento para o voo {{ flight.flight_number }}</h1>
+
+    <p>Origem: {{ flight.origin }}</p>
+    <p>Destino: {{ flight.destination }}</p>
+    <p>Data: {{ flight.date }}</p>
+    <p>Assentos reservados: {{ seats_requested }}</p>
+    <p>Preço total: ${{ total_price }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="confirm_payment">Confirmar Pagamento</button>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

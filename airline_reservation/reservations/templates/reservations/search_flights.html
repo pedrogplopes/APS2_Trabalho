@@ -3,22 +3,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Search Flights</title>
+    <title>Buscar Voos</title>
 </head>
 <body>
-    <h1>Search Flights</h1>
+    <h1>Buscar Voos</h1>
 
     <form method="get" action="{% url 'search_flights' %}">
-        <input type="text" name="query" placeholder="Search for flights" value="{{ request.GET.query }}">
-        <button type="submit">Search</button>
+        <input type="text" name="query" placeholder="Buscar por voos" value="{{ request.GET.query }}">
+        <button type="submit">Buscar</button>
     </form>
 
-    <h2>Results</h2>
+    <h2>Resultados</h2>
     <ul>
         {% for flight in flights %}
-            <li>{{ flight.flight_number }} - {{ flight.origin }} to {{ flight.destination }} on {{ flight.date }}</li>
+            <li>
+                <a href="{% url 'make_reservation' flight.id %}">
+                    {{ flight.flight_number }} - {{ flight.origin }} para {{ flight.destination }} em {{ flight.date }} - ${{ flight.price }}
+                </a>
+            </li>
         {% empty %}
-            <li>No flights found.</li>
+            <li>Nenhum voo encontrado.</li>
         {% endfor %}
     </ul>
 </body>
