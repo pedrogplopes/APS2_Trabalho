@@ -22,3 +22,6 @@ def make_reservation(request, flight_id):
         # user_id deveria ser obtido por POST.get, forçando user_id 1 no código por enquanto
         Reservation.objects.create(user_id=1, flight=flight, seats_reserved=seats_reserved)
     return render(request, 'reservations/make_reservation.html', {'flight': flight})
+
+def home(request):
+    return render(request, 'reservations/home.html')
