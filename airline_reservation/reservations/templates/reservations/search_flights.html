@@ -25,5 +25,11 @@
             <li>Nenhum voo encontrado.</li>
         {% endfor %}
     </ul>
+
+    <p>
+        Usuário atual: {{ user.username }} |
+        <a href="{% url 'my_reservations' %}">Ver Minhas Reservas</a> |
+        <a href="{% url 'logout' %}">Sair</a>
+    </p>
 </body>
 </html>

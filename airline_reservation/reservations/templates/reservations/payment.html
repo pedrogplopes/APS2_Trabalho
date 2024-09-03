@@ -17,6 +17,12 @@
         <button type="submit" name="confirm_payment">Confirmar Pagamento</button>
     </form>
 
+    <p>
+        Usuário atual: {{ user.username }} |
+        <a href="{% url 'search_flights' %}">Voltar para a busca de voos</a> |
+        <a href="{% url 'logout' %}">Sair</a>
+    </p>
+
     {% if messages %}
         <ul>
             {% for message in messages %}

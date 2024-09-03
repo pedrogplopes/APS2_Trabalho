@@ -20,3 +20,9 @@
 <p>Destino: {{ flight.destination }}</p>
 <p>Data: {{ flight.date }}</p>
 <p>Assentos disponíveis: {{ flight.available_seats }}</p>
+
+<p>
+    Usuário atual: {{ user.username }} |
+    <a href="{% url 'search_flights' %}">Voltar para a busca de voos</a> |
+    <a href="{% url 'logout' %}">Sair</a>
+</p>

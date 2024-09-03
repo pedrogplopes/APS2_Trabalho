@@ -21,6 +21,10 @@
         {% endfor %}
     </ul>
 
-    <a href="{% url 'search_flights' %}">Voltar para a busca de voos</a>
+    <p>
+        Usuário atual: {{ user.username }} |
+        <a href="{% url 'search_flights' %}">Voltar para a busca de voos</a> |
+        <a href="{% url 'logout' %}">Sair</a>
+    </p>
 </body>
 </html>
