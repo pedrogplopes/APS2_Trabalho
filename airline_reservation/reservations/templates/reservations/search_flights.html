@@ -16,11 +16,17 @@
     <h2>Resultados</h2>
     <ul>
         {% for flight in flights %}
+            {% if flight.available_seats == 0 %}
+            <li>
+                {{ flight.flight_number }} - {{ flight.origin }} para {{ flight.destination }} em {{ flight.date }} - ${{ flight.price }} - Sem assentos disponíveis
+            </li>
+            {% else %}
             <li>
                 <a href="{% url 'make_reservation' flight.id %}">
                     {{ flight.flight_number }} - {{ flight.origin }} para {{ flight.destination }} em {{ flight.date }} - ${{ flight.price }}
                 </a>
             </li>
+            {% endif %}
         {% empty %}
             <li>Nenhum voo encontrado.</li>
         {% endfor %}
