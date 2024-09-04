@@ -1,5 +1,3 @@
-# reservations/strategies.py
-
 from abc import ABC, abstractmethod
 
 class PricingStrategy(ABC):

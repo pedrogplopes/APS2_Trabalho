@@ -25,9 +25,15 @@ def make_reservation(request, flight_id):
     if request.method == 'POST':
         seats_requested = int(request.POST.get('seats_requested', 1))
         if seats_requested <= flight.available_seats:
-            request.session['flight_id'] = flight.id
-            request.session['seats_requested'] = seats_requested
-            return redirect('payment')
+            reservation = facade.reserve_flight(request.user, flight_id, seats_requested)
+            
+            if reservation:
+                request.session['reservation_id'] = reservation.id
+                request.session['seats_requested'] = seats_requested
+                request.session['flight_id'] = flight.id
+                return redirect('payment')
+            else:
+                messages.error(request, "Erro ao criar a reserva.")
         else:
             messages.error(request, "Não há assentos suficientes disponíveis.")
     return render(request, 'reservations/make_reservation.html', {'flight': flight})
@@ -36,6 +42,7 @@ def make_reservation(request, flight_id):
 def payment(request):
     flight_id = request.session.get('flight_id')
     seats_requested = request.session.get('seats_requested')
+    reservation_id = request.session.get('reservation_id')
 
     if not flight_id or not seats_requested:
         return redirect('home')
@@ -44,27 +51,22 @@ def payment(request):
     strategy = StandardPricingStrategy()  # Ou use DiscountPricingStrategy para descontos
 
     if request.method == 'POST':
-        success = facade.reserve_flight(request.user, flight_id, seats_requested)
-        if success:
-            messages.success(request, "Reserva feita com sucesso!")
-            return redirect('search_flights')
+        if reservation_id:
+            try:
+                facade.confirm_reservation(reservation_id)
+                messages.success(request, "Reserva confirmada com sucesso!")
+                return redirect('search_flights')
+            except Exception as e:
+                messages.error(request, str(e))
         else:
-            messages.error(request, "Não há assentos suficientes disponíveis.")
+            messages.error(request, "Reserva não encontrada.")
+    
     return render(request, 'reservations/payment.html', {
         'flight': flight,
         'seats_requested': seats_requested,
         'total_price': facade.calculate_price(flight, seats_requested, strategy)
     })
 
-@login_required
-def cancel_reservation(request, reservation_id):
-    if request.method == 'POST':
-        facade.cancel_reservation(reservation_id)
-        messages.success(request, "Reserva cancelada com sucesso!")
-        return redirect('my_reservations')
-    reservation = get_object_or_404(Reservation, id=reservation_id, user=request.user)
-    return render(request, 'reservations/confirm_cancel.html', {'reservation': reservation})
-
 
 @login_required
 def cancel_reservation(request, reservation_id):
@@ -74,6 +76,7 @@ def cancel_reservation(request, reservation_id):
         return redirect('my_reservations')
     reservation = get_object_or_404(Reservation, id=reservation_id, user=request.user)
     return render(request, 'reservations/confirm_cancel.html', {'reservation': reservation})
+
 
 def register(request):
     if request.method == 'POST':
@@ -115,5 +118,5 @@ def logout_view(request):
 
 @login_required
 def my_reservations(request):
-    reservations = Reservation.objects.filter(user=request.user)
+    reservations = Reservation.objects.filter(user=request.user).exclude(state=Reservation.STATE_CANCELLED)
     return render(request, 'reservations/my_reservations.html', {'reservations': reservations})
