@@ -7,6 +7,7 @@
     <header>
         {% if user.is_authenticated %}
             <p>Bem-vindo, {{ user.username }}!</p>
+            <a href="{% url 'my_reservations' %}">Minhas Reservas</a> |
             <a href="{% url 'logout' %}">Logout</a>
         {% else %}
             <a href="{% url 'login' %}">Login</a>
