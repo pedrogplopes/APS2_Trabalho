@@ -8,38 +8,7 @@ from django.contrib import messages
 
 
 def home(request):
-    if request.user.is_authenticated:
-        return redirect('search_flights')
-
-    if request.method == 'POST':
-        if 'login' in request.POST:
-            login_form = AuthenticationForm(request, data=request.POST)
-            if login_form.is_valid():
-                username = login_form.cleaned_data.get('username')
-                password = login_form.cleaned_data.get('password')
-                user = authenticate(username=username, password=password)
-                if user is not None:
-                    login(request, user)
-                    messages.info(request, f"Você está logado como {username}.")
-                    return redirect('search_flights')
-                else:
-                    messages.error(request, "Nome de usuário ou senha inválidos.")
-            else:
-                messages.error(request, "Nome de usuário ou senha inválidos.")
-        elif 'register' in request.POST:
-            register_form = UserCreationForm(request.POST)
-            if register_form.is_valid():
-                user = register_form.save()
-                login(request, user)
-                messages.success(request, "Registro bem-sucedido.")
-                return redirect('search_flights')
-            else:
-                messages.error(request, "Falha no registro. Verifique os dados informados.")
-    else:
-        login_form = AuthenticationForm()
-        register_form = UserCreationForm()
-
-    return render(request, 'home.html', {'login_form': login_form, 'register_form': register_form})
+    return redirect('search_flights')
 
 def search_flights(request):
     query = request.GET.get('query', '')
@@ -52,6 +21,7 @@ def search_flights(request):
 
     return render(request, 'reservations/search_flights.html', {'flights': flights})
 
+@login_required
 def make_reservation(request, flight_id):
     flight = get_object_or_404(Flight, id=flight_id)
 
@@ -60,11 +30,12 @@ def make_reservation(request, flight_id):
         if seats_requested <= flight.available_seats:
             request.session['flight_id'] = flight.id
             request.session['seats_requested'] = seats_requested
-            return redirect('payment')  # Redireciona para a página de pagamento
+            return redirect('payment')
         else:
             messages.error(request, "Não há assentos suficientes disponíveis.")
     return render(request, 'reservations/make_reservation.html', {'flight': flight})
 
+@login_required
 def payment(request):
     flight_id = request.session.get('flight_id')
     seats_requested = request.session.get('seats_requested')

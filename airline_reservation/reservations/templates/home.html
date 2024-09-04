@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
+    <title>Início</title>
 </head>
 <body>
     {% if user.is_authenticated %}
         <p>Bem-vindo, {{ user.username }}!</p>
         <a href="{% url 'search_flights' %}">Ir para busca de voos</a>
-        <a href="{% url 'logout' %}">Logout</a>
+        <a href="{% url 'logout' %}">Sair</a>
     {% else %}
-        <h2>Login</h2>
+        <h2>Entrar</h2>
         <form method="post" action="{% url 'home' %}">
             {% csrf_token %}
             {{ login_form.as_p }}
-            <button type="submit" name="login">Login</button>
+            <button type="submit" name="login">Entrar</button>
         </form>
         
         <h2>Cadastro</h2>
         <form method="post" action="{% url 'home' %}">
             {% csrf_token %}
             {{ register_form.as_p }}
-            <button type="submit" name="register">Registrar</button>
+            <button type="submit" name="register">Cadastrar</button>
         </form>
         
         {% if messages %}

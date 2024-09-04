@@ -1,41 +1,39 @@
-<!-- reservations/templates/reservations/search_flights.html -->
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Buscar Voos</title>
 </head>
 <body>
-    <h1>Buscar Voos</h1>
+    <header>
+        {% if user.is_authenticated %}
+            <p>Bem-vindo, {{ user.username }}!</p>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Cadastrar</a>
+        {% endif %}
+    </header>
 
-    <form method="get" action="{% url 'search_flights' %}">
-        <input type="text" name="query" placeholder="Buscar por voos" value="{{ request.GET.query }}">
+    <h2>Buscar Voos</h2>
+    <form method="get">
+        <input type="text" name="query" placeholder="Destino" value="{{ request.GET.query }}">
         <button type="submit">Buscar</button>
     </form>
 
-    <h2>Resultados</h2>
     <ul>
         {% for flight in flights %}
-            {% if flight.available_seats == 0 %}
             <li>
-                {{ flight.flight_number }} - {{ flight.origin }} para {{ flight.destination }} em {{ flight.date }} - ${{ flight.price }} - Sem assentos disponíveis
-            </li>
-            {% else %}
-            <li>
-                <a href="{% url 'make_reservation' flight.id %}">
-                    {{ flight.flight_number }} - {{ flight.origin }} para {{ flight.destination }} em {{ flight.date }} - ${{ flight.price }}
+                <a href="{% if user.is_authenticated %}{% url 'make_reservation' flight.id %}{% else %}#{% endif %}">
+                    {{ flight.origin }} para {{ flight.destination }} - {{ flight.available_seats }} assentos disponíveis
                 </a>
             </li>
-            {% endif %}
         {% empty %}
             <li>Nenhum voo encontrado.</li>
         {% endfor %}
     </ul>
 
-    <p>
-        Usuário atual: {{ user.username }} |
-        <a href="{% url 'my_reservations' %}">Ver Minhas Reservas</a> |
-        <a href="{% url 'logout' %}">Sair</a>
-    </p>
+    {% if not user.is_authenticated %}
+        <p>Você precisa estar logado para fazer uma reserva.</p>
+    {% endif %}
 </body>
 </html>
