@@ -42,10 +42,5 @@ class ReservationFacade:
             raise Exception("Reservation already confirmed.")
 
     def cancel_reservation(self, reservation_id):
-        reservation = Reservation.objects.get(id=reservation_id)
-        if reservation.state == Reservation.STATE_PENDING:
-            PendingState().cancel(reservation)
-        elif reservation.state == Reservation.STATE_CONFIRMED:
-            ConfirmedState().cancel(reservation)
-        elif reservation.state == Reservation.STATE_CANCELLED:
-            raise Exception("Reservation already cancelled.")
+        command = CancelReservationCommand(reservation_id)
+        command.execute()

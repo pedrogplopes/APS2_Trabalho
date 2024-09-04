@@ -1,6 +1,5 @@
 from .models import Reservation, Flight
 from .states import PendingState, ConfirmedState, CancelledState
-
 from .models import Reservation, Flight
 from .states import PendingState
 
@@ -30,6 +29,7 @@ class CancelReservationCommand:
 
     def execute(self):
         reservation = Reservation.objects.get(id=self.reservation_id)
+        flight = reservation.flight
         state_class = {
             Reservation.STATE_PENDING: PendingState,
             Reservation.STATE_CONFIRMED: ConfirmedState,
@@ -37,3 +37,6 @@ class CancelReservationCommand:
         }[reservation.state]
 
         state_class().cancel(reservation)
+        
+        flight.available_seats += reservation.seats_reserved
+        flight.save()

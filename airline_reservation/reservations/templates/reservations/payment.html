@@ -10,7 +10,7 @@
     <p>Destino: {{ flight.destination }}</p>
     <p>Data: {{ flight.date }}</p>
     <p>Assentos reservados: {{ seats_requested }}</p>
-    <p>Preço total: ${{ total_price }}</p>
+    <p>Preço total: ${{ total_price|floatformat:0 }}</p>
 
     <form method="post">
         {% csrf_token %}

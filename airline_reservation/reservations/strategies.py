@@ -11,4 +11,4 @@ class StandardPricingStrategy(PricingStrategy):
 
 class DiscountPricingStrategy(PricingStrategy):
     def calculate_price(self, flight, seats_reserved):
-        return (flight.price * seats_reserved) * 0.9  # 10% de desconto
+        return round(flight.price * seats_reserved) * 0.9  # 10% de desconto

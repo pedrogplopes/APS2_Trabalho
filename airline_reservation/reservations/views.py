@@ -48,7 +48,7 @@ def payment(request):
         return redirect('home')
 
     flight = get_object_or_404(Flight, id=flight_id)
-    strategy = StandardPricingStrategy()  # Ou use DiscountPricingStrategy para descontos
+    strategy = DiscountPricingStrategy()  # Ou use DiscountPricingStrategy para descontos
 
     if request.method == 'POST':
         if reservation_id:
