@@ -8,13 +8,6 @@
     <button type="submit">Reservar</button>
 </form>
 
-{% if messages %}
-    <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
 
 <p>Origem: {{ flight.origin }}</p>
 <p>Destino: {{ flight.destination }}</p>
